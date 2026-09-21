@@ -1,0 +1,243 @@
+{% comment %}
+  {% assign myVariable="Hello Word" %}
+  {{myVariable}}
+  {% assign myNumber = 1123 %}
+  {% assign myFloattingNumber = 112.3 %}
+
+  {{myFloattingNumber}},{{myNumber}}
+
+  {% assign myFLag = true %}
+  {{myFLag}}
+
+  {%assign myNil = null %}
+  {{myNil}}
+
+  {% if myNil !=  null %}
+      {{"Hello Wolrd"}}
+  {% elsif myNil == null%}
+      {{"Bye"}}
+  {% else %}
+      {{"Hi "}}
+  {% endif %}
+
+  {% for tag in product.tags %}
+      {{tag}}
+      <br/>
+  {% endfor %}
+
+  <p>{{product.title}}</p>
+
+  {% capture html %}
+  <div>
+      <p>Hello {{product.title}} </p>
+  </div>
+  {% endcapture %}
+
+  {{html}}
+{% endcomment %}
+
+{% comment %} Conditional Operators {% endcomment %}
+
+{% comment %}
+  {{product.tags}}
+
+  {% if product.tags contains "Sport" %}
+      <p>{{"Product has Snowboard"}}</p>\
+  {% else %}
+      <p>{{"Product doesn't contain snowboard "}}</p>
+
+  {% endif %}
+
+  {% unless product.tags contains "snowboard" %}
+      {{"Product has snowboard"}}
+      {% else %}
+       {{"it doesn't contain Snowboard"}}
+
+  {% endunless %}
+  <br>
+  {{product.title }}
+  <br>
+  {% assign isSnowboard = false %}
+
+
+  {% if product.title contains "Snowboard" or product.tags contains "Winter" %}
+      {%assign isSnowboard=true%}
+  {% endif %}
+  {{isSnowboard}}
+  {{product.price}}
+  {% if isSnowboard and product.price <70000  %}
+      {{"This is an affordable price"}}
+  {% endif %}
+{% endcomment %}
+
+{% comment %} case {% endcomment %}
+
+{% comment %}
+  {{product.type}}
+  {% if product.title %}
+      {% case product.type %}
+      {% when "snowboard" %}
+          <p>It is a snowboard</p>
+
+      {% else %}
+          <p>Undefined Product type</p>
+
+  {% endcase %}
+
+  {% endif %}
+{% endcomment %}
+
+{% comment %} Looping {% endcomment %}
+
+{% comment %}
+  {% for product in collection.products limit: 5 %}
+    <p
+      style=""
+      {% if forloop.first %}
+        color : blue
+      {% elsif forloop.last %}
+        color:red
+      {% endif %}
+    >
+      <h1>{{ forloop.index }}: {{ product.title }}</h1>
+    </p>
+    {% if product.tags.size > 0 %}
+      <h2>Tags</h2>
+    {% endif %}
+
+    {% for tag in product.tags %}
+      {% if tag == 'Sport' %}
+        {% continue %}
+      {% endif %}
+      <li>Product Index: {{ forloop.parentloop.index }} | {{ tag }}</li>
+      {% comment %}
+        {% if tag == 'Sport' %}
+          {% break %}
+        {% endif %}
+      {% endcomment %}
+    {% endfor %}
+  {% endfor %}
+{% endcomment %}
+{% comment %} Paginate {% endcomment %}
+{% comment %}
+  {% paginate collection.products by 5 %}
+    {% for product in collection.products %}
+      <p>{{ product.title }}</p>
+    {% endfor %}
+    {{ paginate | default_pagination }}
+  {% endpaginate %}
+{% endcomment %}
+
+{% comment %} Filters {% endcomment %}
+
+{% comment %} Arithmetic filter {% endcomment %}
+{% comment %} {% assign myNumber = '11' %} {% endcomment %}
+{% comment %} {{ myNumber }} {% endcomment %}
+
+{% comment %} {% assign myNewNumber = myNumber | plus: 5 %} {% endcomment %}
+{% comment %} {% assign myNewNumber = myNumber | minus: 5 %} {% endcomment %}
+{% comment %} {% assign myNewNumber = myNumber | times: 5 %} {% endcomment %}
+{% comment %} {% assign myNewNumber = myNumber | divided_by: 5 %} {% endcomment %}
+
+{% comment %}
+  {% assign myNewNumber = myNumber | plus: 0 %}
+  {% assign moduleOfMyNewNumber = myNumber | modulo: 2 %}
+  {% if moduleOfMyNewNumber == 0 %}
+    {{ 'Even' }}
+  {% else %}
+    {{ 'Odd' }}
+  {% endif %}
+{% endcomment %}
+
+{% comment %}
+  {% assign myRoundedNumber = 10.6 | floor %}
+  {% assign myNewNumber = 60 | at_most: 80 %}
+  {{ myNewNumber }}
+{% endcomment %}
+
+{% comment %} String Filter {% endcomment %}
+{% comment %} {% assign myString = 'Hello I am String' %} {% endcomment %}
+
+{% comment %}
+  {% assign randomtext = ' I am Random text' %}
+  {{ myString | append: randomtext }}
+
+  {% assign htmltext = '<p style="color:red" > hello EveryOne</p>' %}
+  {{ htmltext | strip_html }}
+  <br>
+
+  {% assign html_text = 'Random text having more than 50 character for practicing truncate in it lets strat' %}
+
+  {{ html_text | truncate: 30 }}
+  <br>
+  {% assign myMultiLineText = '
+  This is my first line
+  This is my second lline
+  This is my third line
+  ' | newline_to_br %}
+
+  {{ myMultiLineText }}
+
+  {% assign myText = 'Hello from text that is my text' %}
+  {{ myText | remove_first: 'text' }}
+
+  <br>
+  {% assign myNewNumbers = '1,2,3,4,5' | split: ',' %}
+  {% assign myLanguages = 'html|orange,css|blue,js|yellow' | split: ',' %}
+
+  {% for language in myLanguages %}
+    {% assign mylanguage = language | split: '|' | first %}
+    {% assign myColor = language | split: '|' | last %}
+    <p style="color: {{myColor}}">{{ mylanguage }}</p>
+  {% endfor %}
+{% endcomment %}
+{% comment %}
+  {% for number in myNewNumbers %}
+    <p>{{ number }}</p>
+  {% endfor %}
+{% endcomment %}
+
+{% comment %} Array sorting filters {% endcomment %}
+
+{% comment %}
+  {% assign products = collection.products %}
+  {% assign productTitles = products | map: 'title' %}
+
+  {% comment %}
+    {% for productTitle in productTitles %}
+      <p>{{ productTitle }}</p>
+    {% endfor %}
+  {% endcomment %}
+
+  <p>{{ productTitles | join: '-' }}|</p>
+
+  <p>{{ productTitles.first }}</p>
+  <p>{{ productTitles.last }}</p>
+  <p>{{ productTitles.size }}</p>
+
+  {% assign priceSortedItems = products | sort: 'price' %}
+  {% for priceSortedItem in priceSortedItems %}
+    <p>{{ priceSortedItem.title }} -{{ priceSortedItem.price | money }}</p>
+  {% endfor %}
+
+  {% assign prices = products | map: 'price' | sort %}
+  {% for price in prices %}
+    <p>{{ price | money }}</p>
+  {% endfor %}
+
+  {% assign sumOfPrice = prices | sum %}
+  <p>Total of items price: {{ sumOfPrice }}</p>
+
+  {% assign snowboard = products | where: 'title', 'The Complete Snowboard' | first %}
+  {{ snowboard }}
+  <p>{{ snowboard.title }}-{{ snowboard.price }}</p>
+
+  {% assign tags = ' ' %}
+  {% for product in products %}
+    {% for tag in product.tags %}
+      {% assign tags = tags | append: tag | append: '  ' %}
+    {% endfor %}
+  {% endfor %}
+
+  <p>{{ tags | split: ' ' | uniq | join: ' ' }}</p>
+{% endcomment %}
